@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -20,11 +21,12 @@ public class XmlDownloader {
     private static final String DOWNLOAD_URL = "https://www.smartform.cz/download/kopidlno.xml.zip";
 
     public void download() throws IOException {
+        Files.createDirectories(Path.of("downloads"));
         URL url = URI.create(DOWNLOAD_URL).toURL();
         URLConnection connection = url.openConnection();
 
         try (InputStream inputStream = connection.getInputStream()) {
-            Files.copy(inputStream, ZIP_FILE);
+            Files.copy(inputStream, ZIP_FILE, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
@@ -37,7 +39,7 @@ public class XmlDownloader {
                 throw new IOException("XML file not found in ZIP archive");
             }
 
-            Files.copy(zipInputStream, XML_FILE);
+            Files.copy(zipInputStream, XML_FILE,StandardCopyOption.REPLACE_EXISTING);
         }
     }
 }
